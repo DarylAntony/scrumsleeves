@@ -29,13 +29,25 @@ class Product(models.Model):
     def __unicode__(self):
         return self.name
 
+    def current_velocity(self):
+        try:
+            return self.sprints.all().order_by('number').last().velocity()
+        except self.sprints.ObjectDoesNotExist:
+            return None
+
+    def average_velocity(self):
+        sprint_velocities = [sprint.velocity() for sprint in self.sprints.all()]
+        return sum(sprint_velocities) / len(sprint_velocities)
+
 
 class Sprint(models.Model):
     """
     A Product Sprint
     """
 
-    product = models.ForeignKey('Product')
+    product = models.ForeignKey(
+        'Product',
+        related_name='sprints')
 
     number = models.IntegerField()
 
@@ -49,7 +61,6 @@ class Sprint(models.Model):
         return "{}".format(self.number)
 
     def velocity(self):
-        # import ipdb; ipdb.set_trace()
         return sum(
             self.stories_completed_at_sprint.all().values_list('size', flat=True)
         )

@@ -92,11 +92,12 @@ class ProductTestCase(TestCase):
                 print "=== Sprint {} Velocity {} ===".format(
                     sprint.number,
                     sprint.velocity()
-                ) 
+                )
 
-
-
-
+            print "=== Product {} Current Velocity {} ===".format(
+                    product,
+                    product.current_velocity()
+                )
 
 
     def test_say_yo(self):
